@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QR Tracker — Link to QR + Scan Analytics</title>
+<style>
+:root{--bg:#f7f3eb;--ink:#171717;--muted:#6f6558;--card:#fffaf2;--line:#ded2c1;--accent:#184f45;--gold:#b8833d}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top left,#fff8eb,var(--bg) 42%,#efe2d1);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.5}.wrap{width:min(1120px,calc(100% - 32px));margin:0 auto;padding:28px 0 60px}.nav{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--line);background:rgba(255,250,242,.86);backdrop-filter:blur(14px);border-radius:999px;padding:12px 18px;position:sticky;top:12px;z-index:5}.brand{font-weight:900;letter-spacing:-.04em;font-size:22px}.pill{font-size:12px;color:var(--accent);font-weight:850;letter-spacing:.12em;text-transform:uppercase}.hero{padding:60px 0 32px;display:grid;grid-template-columns:1fr .85fr;gap:28px;align-items:end}h1{font-size:clamp(46px,7vw,92px);line-height:.9;letter-spacing:-.075em;margin:12px 0}.lead{font-size:20px;color:var(--muted);max-width:650px}.zh{display:block;color:var(--muted);font-size:13px;margin-top:6px}.card,.panel{background:rgba(255,250,242,.9);border:1px solid var(--line);border-radius:28px;padding:22px;box-shadow:0 22px 80px rgba(70,44,18,.08)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{display:grid;gap:6px;margin-bottom:12px}label{font-size:12px;font-weight:850;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}input,textarea{width:100%;border:1px solid var(--line);border-radius:16px;background:#fffdf8;padding:13px 14px;font:inherit}textarea{min-height:92px;resize:vertical}.btn{border:1px solid var(--ink);background:var(--ink);color:white;border-radius:999px;padding:12px 16px;font-weight:900;cursor:pointer;text-decoration:none;display:inline-flex;justify-content:center;align-items:center;gap:8px}.btn.alt{background:transparent;color:var(--ink)}.btn.small{font-size:12px;padding:9px 12px}.actions{display:flex;gap:8px;flex-wrap:wrap}.qrList{display:grid;gap:14px;margin-top:16px}.qrItem{display:grid;grid-template-columns:104px 1fr;gap:14px;align-items:start;background:#fffdf8;border:1px solid var(--line);border-radius:22px;padding:14px}.qrImg{width:104px;height:104px;border-radius:16px;border:1px solid var(--line);background:white;padding:6px}.qrItem h3{margin:0 0 4px;font-size:20px;letter-spacing:-.035em}.meta{font-size:13px;color:var(--muted);word-break:break-all}.count{display:inline-flex;border:1px solid rgba(24,79,69,.2);background:rgba(24,79,69,.08);color:var(--accent);border-radius:999px;padding:5px 9px;font-size:12px;font-weight:900;margin:6px 0}.scanTable{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}.scanTable th,.scanTable td{border-bottom:1px solid var(--line);padding:10px 8px;text-align:left;vertical-align:top}.scanTable th{font-size:11px;text-transform:uppercase;color:var(--muted);letter-spacing:.08em}.notice{font-size:13px;color:var(--muted);border-left:3px solid var(--gold);padding-left:12px}.hidden{display:none}.topStats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}.stat{background:#fffdf8;border:1px solid var(--line);border-radius:20px;padding:14px}.stat b{display:block;font-size:26px;letter-spacing:-.05em}.footer{margin-top:28px;color:var(--muted);font-size:13px}@media(max-width:780px){.hero,.grid{grid-template-columns:1fr}.topStats{grid-template-columns:1fr}.qrItem{grid-template-columns:1fr}.qrImg{width:132px;height:132px}h1{font-size:46px}.nav{border-radius:24px;align-items:flex-start}.pill{display:none}.scanTable{font-size:12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav"><div class="brand">QR Tracker</div><div class="pill">Named QR · Scan count · Notes</div></nav>
+  <header class="hero">
+    <div>
+      <div class="pill">Private dashboard</div>
+      <h1>Turn links<br>into tracked QR.</h1>
+      <p class="lead">Create QR codes, name them, add notes, and see scan counts with time/device/IP info.</p>
+      <span class="zh">將連結變成 QR code，幫每個 QR 改名、寫備注，並查看掃描次數與基本紀錄。</span>
+    </div>
+    <div class="card">
+      <p class="notice"><b>私隱提醒：</b>除非掃描者登入或填表，系統不能真正知道「邊個人」掃咗；只會記錄時間、IP、裝置、browser、referrer。</p>
+      <div class="field"><label>Admin password</label><input id="password" type="password" placeholder="Set ADMIN_PASSWORD in Netlify"></div>
+      <button class="btn" onclick="savePassword()">Unlock dashboard</button>
+    </div>
+  </header>
+
+  <main id="app" class="hidden">
+    <section class="topStats">
+      <div class="stat"><span class="zh">QR 數量</span><b id="totalLinks">0</b></div>
+      <div class="stat"><span class="zh">總掃描</span><b id="totalScans">0</b></div>
+      <div class="stat"><span class="zh">最近掃描</span><b id="lastScan">—</b></div>
+    </section>
+
+    <section class="grid">
+      <div class="panel">
+        <h2>Create QR<span class="zh">新增可追蹤 QR</span></h2>
+        <div class="field"><label>QR name</label><input id="name" placeholder="e.g. Chronos Letter 001 / Carry Back IG Bio"></div>
+        <div class="field"><label>Destination link</label><input id="targetUrl" placeholder="https://example.com/form"></div>
+        <div class="field"><label>Custom code optional</label><input id="customCode" placeholder="e.g. letter-001"></div>
+        <div class="field"><label>Notes</label><textarea id="notes" placeholder="Where this QR is used, campaign remarks, city, letter number..."></textarea></div>
+        <button class="btn" onclick="createQR()">Create tracked QR</button>
+      </div>
+      <div class="panel">
+        <h2>Latest scans<span class="zh">最近掃描紀錄</span></h2>
+        <div class="actions"><button class="btn alt small" onclick="loadAll()">Refresh</button><button class="btn alt small" onclick="exportCSV()">Export CSV</button></div>
+        <div style="overflow:auto"><table class="scanTable"><thead><tr><th>Time</th><th>QR</th><th>Device</th><th>IP / Country</th></tr></thead><tbody id="scanRows"></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="panel" style="margin-top:16px">
+      <h2>Your QR codes<span class="zh">你建立咗嘅 QR code</span></h2>
+      <div id="qrList" class="qrList"></div>
+    </section>
+  </main>
+  <div class="footer">Deploy on Netlify. Set environment variable <code>ADMIN_PASSWORD</code> before public use.</div>
+</div>
+<script>
+let LINKS = [], SCANS = [];
+function adminPassword(){ return sessionStorage.getItem('qr_admin_password') || document.getElementById('password').value || ''; }
+function headers(){ return {'content-type':'application/json','x-admin-password':adminPassword()}; }
+function savePassword(){ sessionStorage.setItem('qr_admin_password', document.getElementById('password').value); document.getElementById('app').classList.remove('hidden'); loadAll(); }
+function origin(){ return location.origin; }
+function trackedUrl(code){ return origin() + '/q/' + encodeURIComponent(code); }
+function qrImage(url){ return 'https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=12&data=' + encodeURIComponent(url); }
+function fmt(t){ if(!t) return '—'; return new Date(t).toLocaleString('zh-HK',{hour12:false}); }
+async function api(path, opts={}){ const res = await fetch(path,{...opts,headers:{...headers(),...(opts.headers||{})}}); const data = await res.json().catch(()=>({})); if(!res.ok) throw new Error(data.error || res.statusText); return data; }
+async function loadAll(){ try{ const a=await api('/api/links'); const b=await api('/api/scans'); LINKS=a.links||[]; SCANS=b.scans||[]; render(); }catch(e){ alert(e.message); } }
+async function createQR(){ try{ await api('/api/links',{method:'POST',body:JSON.stringify({name:name.value,targetUrl:targetUrl.value,code:customCode.value,notes:notes.value})}); name.value=''; targetUrl.value=''; customCode.value=''; notes.value=''; await loadAll(); }catch(e){ alert(e.message); } }
+async function saveQR(code){ const box=document.querySelector(`[data-code="${CSS.escape(code)}"]`); try{ await api('/api/links',{method:'PUT',body:JSON.stringify({code,name:box.querySelector('.editName').value,targetUrl:box.querySelector('.editUrl').value,notes:box.querySelector('.editNotes').value,active:box.querySelector('.editActive').checked})}); await loadAll(); }catch(e){ alert(e.message); } }
+async function deleteQR(code){ if(!confirm('Delete this QR and its scan history?')) return; try{ await api('/api/links?code='+encodeURIComponent(code),{method:'DELETE'}); await loadAll(); }catch(e){ alert(e.message); } }
+function copyText(text){ navigator.clipboard.writeText(text); alert('Copied'); }
+function downloadQR(code){ const url=qrImage(trackedUrl(code)); const a=document.createElement('a'); a.href=url; a.download=code+'.png'; a.target='_blank'; a.click(); }
+function render(){ document.getElementById('totalLinks').textContent=LINKS.length; document.getElementById('totalScans').textContent=SCANS.length; document.getElementById('lastScan').textContent=SCANS[0]?fmt(SCANS[0].at).split(' ')[1]:'—'; document.getElementById('scanRows').innerHTML=SCANS.slice(0,30).map(s=>`<tr><td>${fmt(s.at)}</td><td>${escapeHtml(s.linkName||s.code)}</td><td>${escapeHtml((s.device||'')+' / '+(s.browser||''))}</td><td>${escapeHtml((s.ip||'')+' '+(s.country||''))}</td></tr>`).join('') || '<tr><td colspan="4">No scans yet</td></tr>'; document.getElementById('qrList').innerHTML=LINKS.map(link=>{ const url=trackedUrl(link.code); return `<article class="qrItem" data-code="${escapeHtml(link.code)}"><img class="qrImg" src="${qrImage(url)}" alt="QR"><div><h3>${escapeHtml(link.name)}</h3><div class="count">${link.scanCount||0} scans</div><div class="meta">Tracked link: <a href="${url}" target="_blank">${url}</a><br>Destination: ${escapeHtml(link.targetUrl)}</div><div class="grid" style="margin-top:10px"><div class="field"><label>Name</label><input class="editName" value="${escapeAttr(link.name)}"></div><div class="field"><label>Destination</label><input class="editUrl" value="${escapeAttr(link.targetUrl)}"></div></div><div class="field"><label>Notes</label><textarea class="editNotes">${escapeHtml(link.notes||'')}</textarea></div><label style="display:flex;gap:8px;align-items:center;text-transform:none;letter-spacing:0"><input class="editActive" type="checkbox" ${link.active!==false?'checked':''}> Active</label><div class="actions"><button class="btn small" onclick="saveQR('${escapeJs(link.code)}')">Save</button><button class="btn alt small" onclick="copyText('${escapeJs(url)}')">Copy link</button><button class="btn alt small" onclick="downloadQR('${escapeJs(link.code)}')">Open QR PNG</button><button class="btn alt small" onclick="deleteQR('${escapeJs(link.code)}')">Delete</button></div></div></article>` }).join('') || '<p class="notice">No QR codes yet.</p>'; }
+function exportCSV(){ const rows=[['time','qr_code','qr_name','target_url','ip','country','device','browser','referrer','user_agent'],...SCANS.map(s=>[s.at,s.code,s.linkName,s.targetUrl,s.ip,s.country,s.device,s.browser,s.referrer,s.userAgent])]; const csv=rows.map(r=>r.map(v=>'"'+String(v||'').replace(/"/g,'""')+'"').join(',')).join('\n'); const blob=new Blob([csv],{type:'text/csv'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='qr-scans.csv'; a.click(); }
+function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function escapeAttr(s){ return escapeHtml(s).replace(/`/g,'&#96;'); }
+function escapeJs(s){ return String(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+if(sessionStorage.getItem('qr_admin_password')){ document.getElementById('password').value=sessionStorage.getItem('qr_admin_password'); document.getElementById('app').classList.remove('hidden'); loadAll(); }
+</script>
+</body>
+</html>

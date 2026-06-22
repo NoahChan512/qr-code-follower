@@ -1,0 +1,14 @@
+{
+  "name": "qr-tracker-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Netlify QR code tracker with named links, notes and scan analytics.",
+  "scripts": {
+    "test": "node tests/smoke-test.js",
+    "start": "netlify dev"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^9.1.2"
+  },
+  "devDependencies": {}
+}

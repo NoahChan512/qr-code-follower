@@ -1,0 +1,24 @@
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/q/:code"
+  to = "/.netlify/functions/scan?code=:code"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/links"
+  to = "/.netlify/functions/links"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/scans"
+  to = "/.netlify/functions/scans"
+  status = 200
+  force = true
