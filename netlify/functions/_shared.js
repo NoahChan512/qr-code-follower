@@ -55,7 +55,8 @@ async function writeLocal(data) {
 }
 
 async function readData() {
-  if (process.env.NETLIFY && blobs) {
+  if (process.env.NETLIFY) {
+    if (!blobs) throw new Error('Netlify Blobs package is missing. Deploy through Git/Netlify build so npm dependencies are installed.');
     const store = blobs.getStore(STORE_NAME);
     return (await store.get('data.json', { type: 'json' })) || { links: [], scans: [] };
   }
@@ -63,7 +64,8 @@ async function readData() {
 }
 
 async function writeData(data) {
-  if (process.env.NETLIFY && blobs) {
+  if (process.env.NETLIFY) {
+    if (!blobs) throw new Error('Netlify Blobs package is missing. Deploy through Git/Netlify build so npm dependencies are installed.');
     const store = blobs.getStore(STORE_NAME);
     await store.setJSON('data.json', data);
     return;

@@ -1,6 +1,7 @@
 const { now, readData, writeData, clientInfo } = require('./_shared');
 
 exports.handler = async (event) => {
+  try {
   const code = event.queryStringParameters?.code || (event.path || '').split('/').pop();
   const data = await readData();
   data.links ||= [];
@@ -34,4 +35,7 @@ exports.handler = async (event) => {
     },
     body: ''
   };
+  } catch (e) {
+    return { statusCode: 500, headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' }, body: '<!doctype html><meta name="viewport" content="width=device-width, initial-scale=1"><body style="font-family:system-ui;padding:32px"><h1>QR tracker error</h1><p>'+String(e && e.message || e)+'</p></body>' };
+  }
 };

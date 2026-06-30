@@ -1,6 +1,7 @@
 const { json, now, code, parseBody, normalizeUrl, adminOk, readData, writeData } = require('./_shared');
 
 exports.handler = async (event) => {
+  try {
   if (event.httpMethod === 'OPTIONS') return json(200, { ok: true });
   if (!adminOk(event)) return json(401, { error: 'Wrong admin password' });
 
@@ -66,4 +67,7 @@ exports.handler = async (event) => {
   }
 
   return json(405, { error: 'Method not allowed' });
+  } catch (e) {
+    return json(500, { error: String(e && e.message || e) });
+  }
 };
